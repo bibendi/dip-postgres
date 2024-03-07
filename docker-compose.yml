@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:${DIP_INFRA_POSTGRES_IMAGE_TAG}
+    volumes:
+      - postgres:/var/lib/postgresql/data
+      - .psqlrc:/root/.psqlrc:ro
+      - ./log:/var/log/psql_history
+    ports:
+      - 5432
+    environment:
+      POSTGRES_PASSWORD: keepinsecret
+    healthcheck:
+      test: pg_isready -U postgres -h 127.0.0.1
+      interval: 10s
+
+volumes:
+  postgres:
+
+networks:
+  default:
+    name: ${DIP_INFRA_NETWORK_NAME}
+    external: true
